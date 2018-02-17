@@ -108,6 +108,19 @@ def stop_keyboard(message):
     bot.send_message(message.chat.id, 'Клавиатура выключена', reply_markup=remove_markup)
 ### /stop_keyboard command ###
 
+### /git command ###
+@bot.message_handler(commands=['git'])
+def git(message):
+    buttons = types.InlineKeyboardMarkup()
+    url_button = types.InlineKeyboardButton(text='Перейти по ссылке', \
+                                        url='https://github.com/KonstantinShvyryaev/tth-2018-bot')
+    buttons.add(url_button)
+    bot.send_message(message.chat.id, \
+                    '<b>Хотите посмотреть код нашего бота?</b>', \
+                    parse_mode='HTML', \
+                    reply_markup=buttons)
+### /git command ###
+
 ### Text Handler ###
 @bot.message_handler(content_types=['text'])
 def text(message):
