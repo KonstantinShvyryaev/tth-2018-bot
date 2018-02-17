@@ -1,0 +1,96 @@
+html {
+    overflow:  hidden;
+}
+
+h1, p {
+    font-family: "Open Sans", sans-serif;
+    color: #ffffff;
+
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+h1 {
+    font-size: 60px;
+}
+
+p {
+    font-size: 30px;
+}
+
+a {
+    text-decoration: none;
+    color: #ffffff;
+}
+
+a:hover {
+    text-decoration: underline;
+    color: rgb(50,175,237);
+}
+
+.mask {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    /*background-color:rgba(45, 62, 87, 0.8);*/
+    background-color:rgba(51, 51, 51, 0.7);
+
+    z-index: 100;
+}
+
+.image-position {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.image-background {
+    /*position: fixed;*/
+    background-image: url("../img/background.png");
+    background-position: center;
+    display: block;
+    margin: auto;
+    width: 100%;
+    height: 100%;
+}
+
+.wrapper {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-template-rows: 10% 80% 10%;
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    z-index: 1000;
+}
+
+.header {
+    grid-column: span 12;
+}
+
+.left {
+    grid-column: span 1;
+}
+
+.center {
+    grid-column: span 10;
+    text-align: center;
+}
+
+.right {
+    grid-column: span 1;
+}
+
+.footer {
+    grid-column: span 12;
+}
