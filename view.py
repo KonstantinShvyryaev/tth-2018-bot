@@ -3,7 +3,7 @@ from app import app, db, bot
 from models import *
 
 from telebot import types
-from config import token
+from config import token, web_site
 
 import hashlib
 
@@ -18,7 +18,7 @@ from config import spreadsheet_id
 def index():
     ''' Connecting with bot '''
     bot.remove_webhook()
-    bot.set_webhook(url='https://your-web-site.com/{}'.format(token))
+    bot.set_webhook(url='{}{}'.format(web_site, token))
 
     return render_template('index.html')
 ### Front page ###

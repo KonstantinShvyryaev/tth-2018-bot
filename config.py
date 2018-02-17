@@ -14,6 +14,7 @@ class Configuration(object):
 
 # Telegram API #
 token = 'your_token'
+web_site = 'https://your_app.herokuapp.com/'
 
 # Google API #
 CREDENTIALS_FILE = 'your_credentials_file'
