@@ -41,7 +41,9 @@ class Users(db.Model):
     first_name = db.Column(db.String(35))
     last_name = db.Column(db.String(35))
     status = db.Column(db.String(15))
-    is_confirmed = db.Column(db.Boolean(False))
+    grp_last_name = db.Column(db.String(35))
+    grp_first_name = db.Column(db.String(35))
+    grp_second_name = db.Column(db.String(35))
 
     def __init__(self, *args, **kwargs):
         super(Users, self).__init__(*args, **kwargs)

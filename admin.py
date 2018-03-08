@@ -23,10 +23,11 @@ class AdminView(AdminMixin, ModelView):
 class HomeAdminView(AdminMixin, AdminIndexView):
     pass
 
-admin = Admin(app, 'TTH helper', url='/', index_view=HomeAdminView(name='Home'))
+#admin = Admin(app, 'TTH helper', url='/', index_view=HomeAdminView(name='Home'))
+admin = Admin(app)
 admin.add_view(ModelView(Events, db.session))
 admin.add_view(ModelView(Users, db.session))
 
 ### Flask-Security ###
-user_datastore = SQLAlchemyUserDatastore(db, User, Role)
-security = Security(app, user_datastore)
+#user_datastore = SQLAlchemyUserDatastore(db, User, Role)
+#security = Security(app, user_datastore)
