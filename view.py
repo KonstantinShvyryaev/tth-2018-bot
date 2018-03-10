@@ -61,7 +61,7 @@ def start(message):
         pass
     elif (user.status == 'Admin'):
         markup.row('Отправить мем', 'Отправить сообщение')
-        markup.row('Отправить опрос')
+        markup.row('Отправить опрос', 'Обновить')
         markup.row('Изменить статус пользователя')
     elif (user.status == 'Questions'):
         markup.row('Отправить опрос')
@@ -91,7 +91,7 @@ def start_keyboard(message):
         pass
     elif (user.status == 'Admin'):
         markup.row('Отправить мем', 'Отправить сообщение')
-        markup.row('Отправить опрос')
+        markup.row('Отправить опрос', 'Обновить')
         markup.row('Изменить статус пользователя')
     elif (user.status == 'Questions'):
         markup.row('Отправить опрос')
@@ -204,7 +204,7 @@ def text(message):
         cur_time = time.time()
         diff = cur_time - conf_info_temp[1]
 
-        if diff > 10:
+        if diff > 60:
             conf_info_temp[1] = time.time()
 
             range_ = 'A2:AD2'
@@ -218,7 +218,7 @@ def text(message):
         users = Users.query.all()
         bot.send_message(message.chat.id, \
                         '<b>💡 На конференции 💡</b>\n🚗 Приехали: {}\n\
-🖐️ Младше 14 лет: {}\n🤞 От 14 до 18 лет: {}\n👌 Старше 18 лет: {}\n\
+⚽ Младше 14 лет: {}\n🎮 От 14 до 18 лет: {}\n🍀 Старше 18 лет: {}\n\
 👱 Парней: {}\n👩 Девушек: {}'.format(conf_info_temp[0][1], \
                                 conf_info_temp[0][25], \
                                 conf_info_temp[0][26], \
@@ -262,13 +262,42 @@ def text(message):
                             parse_mode='HTML')
                 return
 
+            if full_name[0] == 'Мемесов' \
+                and full_name[1] == 'Угандий' \
+                    and full_name[2] == 'Наклсович':
+                bot.send_message(message.chat.id, \
+                            '<b>Я знал, что хоть один человек сделает это 😂\n\
+И в подарок ты получаешь 🎉 ничего 🎉</b>', \
+                            parse_mode='HTML')
+                return
+
             is_distributed = False
             for i in small_group_temp[0]:
                 if i[0] != '':
                     if (i[2] == full_name[0] and i[3] == full_name[1] and i[4] == full_name[2]):
-                        bot.send_message(message.chat.id, \
+                        if i[0] == '2':
+                            bot.send_message(message.chat.id, \
+                                '<b>Вы во {} группе 😊</b>'.format(i[0]), \
+                                parse_mode='HTML')
+                        else:
+                            bot.send_message(message.chat.id, \
                                 '<b>Вы в {} группе 😊</b>'.format(i[0]), \
                                 parse_mode='HTML')
+
+                        buttons = types.InlineKeyboardMarkup()
+                        grp_save = types.InlineKeyboardButton(text='Сохранить', \
+                                                            callback_data='grp_save')
+                        grp_break = types.InlineKeyboardButton(text='Отмена', \
+                                                            callback_data='grp_break')
+                        buttons.add(grp_save, grp_break)
+
+                        bot.send_message(message.chat.id, \
+                                '<b>{} {} {}\nХотите ли вы сохранить ваши ФИО? 🙃 \
+Вам больше не придется их вводить 😉</b>'.format(full_name[0], \
+                                                    full_name[1], \
+                                                        full_name[2]), \
+                                parse_mode='HTML', \
+                                reply_markup=buttons)
                         return
                     
                     is_distributed = True
@@ -284,7 +313,7 @@ def text(message):
                                 parse_mode='HTML')
         # grp_processing
 
-        if diff > 100:
+        if diff > 120:
             small_group_temp[1] = time.time()
 
             range_ = 'C3:G1000'
@@ -296,12 +325,36 @@ def text(message):
                 small_group_val = response['values']
                 small_group_temp[0] = small_group_val
 
+        user = Users.query.filter_by(chat_id=message.from_user.id).first()
+        if user.grp_last_name is not None:
+            return grp_db_processing(message, \
+                                    user.grp_last_name, \
+                                    user.grp_first_name, \
+                                    user.grp_second_name)
+
         msg = bot.send_message(message.chat.id, \
                             '<b>Введите фамилию, имя, отчество через пробел 😌</b>\n\
 <i>(Пример: Мемесов Угандий Наклсович)</i>', \
                             parse_mode='HTML')
         bot.register_next_step_handler(msg, grp_processing)
     # В какой я группе?
+
+    # Обновить
+    elif (message.text == 'Обновить'):
+        user = Users.query.filter_by(chat_id=message.from_user.id).first()
+        if(user.status == 'Admin'):
+            buttons = types.InlineKeyboardMarkup()
+            upd_success = types.InlineKeyboardButton(text='Обновить', \
+                                                    callback_data='upd_success')
+            update_break = types.InlineKeyboardButton(text='Отмена', \
+                                                    callback_data='update_break')
+            buttons.add(upd_success, update_break)
+
+            bot.send_message(message.chat.id, \
+                            '<b>Вы хотите обновить клавиатуры всех пользователей?</b>', \
+                            parse_mode="HTML", \
+                            reply_markup=buttons)
+    # Обновить
 
     # Изменить статус пользователя
     elif (message.text == 'Изменить статус пользователя'):
@@ -375,7 +428,6 @@ def text(message):
                                 parse_mode='HTML')
                 bot.send_message(message.chat.id, \
                                 '{}'.format(message.text), \
-                                parse_mode='HTML', \
                                 reply_markup=buttons)
             except Exception as e:
                 bot.send_message(message.chat.id, 'oooops')
@@ -467,6 +519,30 @@ def callback_inline(call):
                                 parse_mode='HTML')
         # res_break button
 
+        # grp_save button
+        elif call.data == 'grp_save':
+            text_splt = call.message.text.split()
+
+            bot.edit_message_text(chat_id=call.message.chat.id, \
+                                message_id=call.message.message_id, \
+                                text='<b>Готово 😊</b>', \
+                                parse_mode='HTML')
+
+            user = Users.query.filter_by(chat_id=call.message.chat.id).first()
+            user.grp_last_name = text_splt[0]
+            user.grp_first_name = text_splt[1]
+            user.grp_second_name = text_splt[2]
+            db.session.commit()
+        # grp_save button
+
+        # grp_break button
+        elif call.data == 'grp_break':
+            bot.edit_message_text(chat_id=call.message.chat.id, \
+                                message_id=call.message.message_id, \
+                                text='<b>В другой раз 😉</b>', \
+                                parse_mode='HTML')
+        # grp_break button
+
         # mem_post button
         elif call.data == 'mem_post':
             bot.delete_message(call.message.chat.id, call.message.message_id - 2)
@@ -530,9 +606,11 @@ def callback_inline(call):
             users = Users.query.all()
             for user in users:
                 bot.send_message(user.chat_id, \
-                        '<i>Message by</i> @{}\n\n{}'.format(call.message.chat.username, \
-                                                            call.message.text), \
-                        parse_mode='HTML')
+                                '<i>Message by</i> @{}'.format(call.message.chat.username), \
+                                parse_mode='HTML')
+                bot.send_message(user.chat_id, \
+                                '{}'.format(call.message.text), \
+                                parse_mode='HTML')
         # message_post button
 
         # message_post_anonymously button
@@ -548,13 +626,11 @@ def callback_inline(call):
             for user in users:
                 if (user.status == 'Admin') or (user.status == 'VIP'):
                     bot.send_message(user.chat_id, \
-                        '<i>Anonymously by</i> @{}\n\n{}'.format(call.message.chat.username, \
-                                                                call.message.text), \
-                        parse_mode='HTML')
-                else:
-                    bot.send_message(user.chat_id, \
-                        '<b>Сообщение от TTH:</b>\n\n{}'.format(call.message.text), \
-                        parse_mode='HTML')
+                                '<i>Anonymously by</i> @{}'.format(call.message.chat.username), \
+                                parse_mode='HTML')
+                bot.send_message(user.chat_id, \
+                                '{}'.format(call.message.text), \
+                                parse_mode='HTML')
         # message_post_anonymously button
 
         # message_break button
@@ -600,6 +676,48 @@ def callback_inline(call):
                                 text="<b>В другой раз 😉</b>", \
                                 parse_mode='HTML')
         # inter_break button
+
+
+        # upd_success button
+        elif call.data == 'upd_success':
+            bot.edit_message_text(chat_id=call.message.chat.id, \
+                                message_id=call.message.message_id, \
+                                text="<b>Готово 😊</b>", \
+                                parse_mode='HTML')
+
+            users = Users.query.all()
+            for user in users:
+                markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+                markup.row('Расписание', 'Что сейчас?')
+                markup.row('Регистрация', 'Я не расселен')
+                markup.row('Где покушать?', 'Кто на TTH?')
+                markup.row('В какой я группе?')
+                if (user.status == 'User'):
+                    pass
+                elif (user.status == 'Admin'):
+                    markup.row('Отправить мем', 'Отправить сообщение')
+                    markup.row('Отправить опрос', 'Обновить')
+                    markup.row('Изменить статус пользователя')
+                elif (user.status == 'Questions'):
+                    markup.row('Отправить опрос')
+                elif (user.status == 'Memeses'):
+                    markup.row('Отправить мем')
+                elif (user.status == 'VIP'):
+                    markup.row('Отправить сообщение')
+
+                bot.send_message(user.chat_id, \
+                                '<b>💢 Обновление 💢</b>', \
+                                parse_mode='HTML', \
+                                reply_markup=markup)
+        # upd_success button
+
+        # update_break button
+        elif call.data == 'update_break':
+            bot.edit_message_text(chat_id=call.message.chat.id, \
+                                message_id=call.message.message_id, \
+                                text="<b>В другой раз 😉</b>", \
+                                parse_mode='HTML')
+        # update_break button
 
 ### Callback query handler ###
 
@@ -691,6 +809,35 @@ def getTime(dt):
         minute = '0' + str(minute)
 
     return '{}:{}'.format(hour, minute)
+
+# grp_db_processing
+def grp_db_processing(message, last_name, first_name, second_name):
+    is_distributed = False
+    for i in small_group_temp[0]:
+        if i[0] != '':
+            if (i[2] == last_name and i[3] == first_name and i[4] == second_name):
+                if i[0] == '2':
+                    bot.send_message(message.chat.id, \
+                        '<b>Вы во {} группе 😊</b>'.format(i[0]), \
+                        parse_mode='HTML')
+                else:
+                    bot.send_message(message.chat.id, \
+                        '<b>Вы в {} группе 😊</b>'.format(i[0]), \
+                        parse_mode='HTML')
+                return
+            
+            is_distributed = True
+
+    if is_distributed:
+        bot.send_message(message.chat.id, \
+                        '<b>Мы еще не распределили вас в малую группу, \
+либо вы неверно ввели ваши ФИО 🤔</b>\n<i>Либо мы неверно ввели ваши ФИО</i> 😉', \
+                        parse_mode='HTML')
+    else:
+        bot.send_message(message.chat.id, \
+                        '<b>Мы еще не распределили малые группы 🤔</b>', \
+                        parse_mode='HTML')
+# grp_db_processing
 
 # Function for changing status for user
 def change_status_for_user(message):
