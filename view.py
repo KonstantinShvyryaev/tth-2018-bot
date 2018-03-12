@@ -555,12 +555,15 @@ def callback_inline(call):
             users = Users.query.all()
             max_quality = len(call.message.photo) - 1
             for user in users:
-                bot.send_message(user.chat_id, \
-                                '<i>Memes by</i> @{}'.format(call.message.chat.username), \
-                                parse_mode='HTML')
-                bot.send_photo(user.chat_id, \
-                            call.message.photo[max_quality].file_id, \
-                            call.message.caption)
+                try:
+                    bot.send_message(user.chat_id, \
+                                    '<i>Memes by</i> @{}'.format(call.message.chat.username), \
+                                    parse_mode='HTML')
+                    bot.send_photo(user.chat_id, \
+                                call.message.photo[max_quality].file_id, \
+                                call.message.caption)
+                except Exception as e:
+                    continue
         # mem_post button
 
         # mem_post_anonymously button
@@ -575,13 +578,16 @@ def callback_inline(call):
             users = Users.query.all()
             max_quality = len(call.message.photo) - 1
             for user in users:
-                if (user.status == 'Admin') or (user.status == 'VIP'):
-                    bot.send_message(user.chat_id, \
+                try:
+                    if (user.status == 'Admin') or (user.status == 'VIP'):
+                        bot.send_message(user.chat_id, \
                                 '<i>Anonymously by</i> @{}'.format(call.message.chat.username), \
                                 parse_mode='HTML')
-                bot.send_photo(user.chat_id, \
-                            call.message.photo[max_quality].file_id, \
-                            call.message.caption)
+                    bot.send_photo(user.chat_id, \
+                                call.message.photo[max_quality].file_id, \
+                                call.message.caption)
+                except Exception as e:
+                    continue
         # mem_post_anonymously button
 
         # mem_break button
@@ -605,12 +611,15 @@ def callback_inline(call):
 
             users = Users.query.all()
             for user in users:
-                bot.send_message(user.chat_id, \
+                try:
+                    bot.send_message(user.chat_id, \
                                 '<i>Message by</i> @{}'.format(call.message.chat.username), \
                                 parse_mode='HTML')
-                bot.send_message(user.chat_id, \
-                                '{}'.format(call.message.text), \
-                                parse_mode='HTML')
+                    bot.send_message(user.chat_id, \
+                                    '{}'.format(call.message.text), \
+                                    parse_mode='HTML')
+                except Exception as e:
+                    continue
         # message_post button
 
         # message_post_anonymously button
@@ -624,13 +633,16 @@ def callback_inline(call):
 
             users = Users.query.all()
             for user in users:
-                if (user.status == 'Admin') or (user.status == 'VIP'):
-                    bot.send_message(user.chat_id, \
+                try:
+                    if (user.status == 'Admin') or (user.status == 'VIP'):
+                        bot.send_message(user.chat_id, \
                                 '<i>Anonymously by</i> @{}'.format(call.message.chat.username), \
                                 parse_mode='HTML')
-                bot.send_message(user.chat_id, \
-                                '{}'.format(call.message.text), \
-                                parse_mode='HTML')
+                    bot.send_message(user.chat_id, \
+                                    '{}'.format(call.message.text), \
+                                    parse_mode='HTML')
+                except Exception as e:
+                    continue
         # message_post_anonymously button
 
         # message_break button
@@ -661,11 +673,14 @@ def callback_inline(call):
 
             users = Users.query.all()
             for user in users:
-                bot.send_message(user.chat_id, \
+                try:
+                    bot.send_message(user.chat_id, \
                             '<b>Мы подготовили для вас опрос 😊\n\
 Скорее переходите отвечать 👇</b>', \
                             parse_mode='HTML', \
                             reply_markup=buttons)
+                except Exception as e:
+                    continue
         # inter_post button
 
         # inter_break button
@@ -687,28 +702,31 @@ def callback_inline(call):
 
             users = Users.query.all()
             for user in users:
-                markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-                markup.row('Расписание', 'Что сейчас?')
-                markup.row('Регистрация', 'Я не расселен')
-                markup.row('Где покушать?', 'Кто на TTH?')
-                markup.row('В какой я группе?')
-                if (user.status == 'User'):
-                    pass
-                elif (user.status == 'Admin'):
-                    markup.row('Отправить мем', 'Отправить сообщение')
-                    markup.row('Отправить опрос', 'Обновить')
-                    markup.row('Изменить статус пользователя')
-                elif (user.status == 'Questions'):
-                    markup.row('Отправить опрос')
-                elif (user.status == 'Memeses'):
-                    markup.row('Отправить мем')
-                elif (user.status == 'VIP'):
-                    markup.row('Отправить сообщение')
+                try:
+                    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+                    markup.row('Расписание', 'Что сейчас?')
+                    markup.row('Регистрация', 'Я не расселен')
+                    markup.row('Где покушать?', 'Кто на TTH?')
+                    markup.row('В какой я группе?')
+                    if (user.status == 'User'):
+                        pass
+                    elif (user.status == 'Admin'):
+                        markup.row('Отправить мем', 'Отправить сообщение')
+                        markup.row('Отправить опрос', 'Обновить')
+                        markup.row('Изменить статус пользователя')
+                    elif (user.status == 'Questions'):
+                        markup.row('Отправить опрос')
+                    elif (user.status == 'Memeses'):
+                        markup.row('Отправить мем')
+                    elif (user.status == 'VIP'):
+                        markup.row('Отправить сообщение')
 
-                bot.send_message(user.chat_id, \
-                                '<b>💢 Обновление 💢</b>', \
-                                parse_mode='HTML', \
-                                reply_markup=markup)
+                    bot.send_message(user.chat_id, \
+                                    '<b>💢 Обновление 💢</b>', \
+                                    parse_mode='HTML', \
+                                    reply_markup=markup)
+                except Exception as e:
+                    continue
         # upd_success button
 
         # update_break button
