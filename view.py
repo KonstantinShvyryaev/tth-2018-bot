@@ -35,7 +35,8 @@ def page_not_found(e):
 ### Telegram webhook ###
 @app.route('/{}'.format(token), methods=['POST'])
 def webhook():
-    bot.process_new_updates([types.Update.de_json(request.stream.read().decode('utf-8'))])
+    # bot.process_new_updates([types.Update.de_json(request.stream.read().decode('utf-8'))])
+    bot.process_new_updates([types.Update.de_json(request.data.decode('utf-8'))])
     return 'ok', 200
 ### Telegram webhook ###
 

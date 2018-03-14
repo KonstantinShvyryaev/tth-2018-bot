@@ -44,4 +44,4 @@ manager = Manager(app)
 manager.add_command('db', MigrateCommand)
 
 ### Admin ###
-#from admin import *
+from admin import *
