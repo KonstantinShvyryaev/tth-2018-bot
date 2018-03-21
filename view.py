@@ -5,12 +5,17 @@ from models import *
 from telebot import types
 from config import token, web_site
 
-from datetime import datetime
+from datetime import datetime, timedelta
+from dateutil.tz import tzutc
+import pytz
 from sqlalchemy import and_
 
 from app import service
 from config import spreadsheet_id
 import time
+
+import botan
+from config import botan_key
 
 ### Front page ###
 @app.route('/')
@@ -102,6 +107,8 @@ def start_keyboard(message):
         markup.row('Отправить сообщение')
 
     bot.send_message(message.chat.id, 'Клавиатура включена', reply_markup=markup)
+
+    botan.track(botan_key, message.chat.id, None, 'start_keyboard')
 ### /start_keyboard command ###
 
 ### /stop_keyboard command ###
@@ -110,6 +117,8 @@ def stop_keyboard(message):
     remove_markup = types.ReplyKeyboardRemove()
 
     bot.send_message(message.chat.id, 'Клавиатура отключена', reply_markup=remove_markup)
+
+    botan.track(botan_key, message.chat.id, None, 'stop_keyboard')
 ### /stop_keyboard command ###
 
 ### /git command ###
@@ -123,6 +132,8 @@ def git(message):
                     '<b>Хотите посмотреть код нашего бота?</b>', \
                     parse_mode='HTML', \
                     reply_markup=buttons)
+
+    botan.track(botan_key, message.chat.id, None, 'git')
 ### /git command ###
 
 # Google: create array when app starting
@@ -151,11 +162,15 @@ def text(message):
     # Расписание
     if (message.text == 'Расписание'):
         bot.send_message(message.chat.id, timetable(), parse_mode='HTML')
+
+        botan.track(botan_key, message.chat.id, None, 'Расписание')
     # Расписание
 
     # Что сейчас?
     elif (message.text == 'Что сейчас?'):
         bot.send_message(message.chat.id, events_now(), parse_mode='HTML')
+
+        botan.track(botan_key, message.chat.id, None, 'Что сейчас?')
     # Что сейчас?
 
     # Регистрация
@@ -169,6 +184,8 @@ def text(message):
                 '<b>Для регистрации вам необходимо перейти поссылке 👇</b>', \
                 parse_mode='HTML', \
                 reply_markup=buttons)
+
+        botan.track(botan_key, message.chat.id, None, 'Регистрация')
     # Регистрация
     
     # Я не расселен
@@ -185,6 +202,8 @@ def text(message):
 за расселение и он вам ответит 😉</b>''', \
                         parse_mode='HTML', \
                         reply_markup=buttons)
+
+        botan.track(botan_key, message.chat.id, None, 'Я не расселен')
     # Я не расселен
 
     # Где покушать?
@@ -197,6 +216,8 @@ def text(message):
                         '<b>Мы подобрали для вас места, где можно перекусить 😉</b>', \
                         parse_mode='HTML', \
                         reply_markup=buttons)
+
+        botan.track(botan_key, message.chat.id, None, 'Где покушать?')
     # Где покушать?
 
     # Кто на TTH?
@@ -227,10 +248,14 @@ def text(message):
                                 conf_info_temp[0][28], \
                                 conf_info_temp[0][29]), \
                         parse_mode='HTML')
+
+        botan.track(botan_key, message.chat.id, None, 'Кто на TTH?')
     # Кто на TTH?
 
     # В какой я группе?
     elif (message.text == 'В какой я группе?'):
+        botan.track(botan_key, message.chat.id, None, 'В какой я группе?')
+
         global small_group_temp
 
         try:
@@ -746,75 +771,141 @@ def callback_inline(call):
 def timetable():
     return '''\r
 <b>Четверг:</b>
-    <b>18:30</b>  -  ОТКРЫТИЕ
+    <b>15:00</b>  -  📌 РЕГИСТРАЦИЯ
+    <b>18:00</b>  -  💣 ОТКРЫТИЕ
 
 <b>Пятница:</b>
-    <b>08:30</b>  -  ЗАВТРАК
-    <b>09:10</b>  -  МОЛИТВА
-    <b>10:00</b>  -  СОБРАНИЕ
-    <b>12:00</b>  -  МАСТЕР КЛАССЫ
-    <b>14:30</b>  -  СОБРАНИЕ
-    <b>16:00</b>  -  МАЛЫЕ ГРУППЫ
-    <b>18:30</b>  -  СОБРАНИЕ
+    <b>09:00</b>  -  🙏 МОЛИТВА
+    <b>10:00</b>  -  🎤 БОЛЬШОЕ ТОК-ШОУ
+    <b>12:30</b>  -  ✏️ МАСТЕР-КЛАССЫ
+    <b>13:30</b>  -  🎈 ОБЕД + РАЗВЛЕЧЕНИЯ
+    <b>14:30</b>  -  💡 СОБРАНИЕ
+    <b>16:30</b>  -  ☁️ МАЛЫЕ ГРУППЫ
+    <b>18:00</b>  -  💡 СОБРАНИЕ
 
 <b>Суббота:</b>
-    <b>08:30</b>  -  ЗАВТРАК
-    <b>09:10</b>  -  МОЛИТВА
-    <b>10:00</b>  -  СОБРАНИЕ
-    <b>12:00</b>  -  МАСТЕР КЛАССЫ
-    <b>14:30</b>  -  СОБРАНИЕ
-    <b>16:00</b>  -  МАЛЫЕ ГРУППЫ
-    <b>19:00</b>  -  ВЕЧЕР ХВАЛЫ
+    <b>09:00</b>  -  🙏 МОЛИТВА
+    <b>10:00</b>  -  💡 СОБРАНИЕ
+    <b>12:30</b>  -  ✏️ МАСТЕР-КЛАССЫ
+    <b>13:30</b>  -  🎈 ОБЕД + РАЗВЛЕЧЕНИЯ
+    <b>14:30</b>  -  💡 СОБРАНИЕ
+    <b>16:30</b>  -  ☁️ МАЛЫЕ ГРУППЫ
+    <b>18:00</b>  -  🔥 ВЕЧЕР ХВАЛЫ
 
 <b>Воскресение:</b>
-    <b>09:00</b>  -  МОЛИТВА
-    <b>10:00</b>  -  СОБРАНИЕ
-    <b>14:00</b>  -  СОБРАНИЕ (Подростки)
-    <b>17:00</b>  -  МОЛИТВА
-    <b>18:00</b>  -  СОБРАНИЕ
+    <b>09:00</b>  -  ☁️ МОЛИТВА
+    <b>10:00</b>  -  💡 СОБРАНИЕ
+    <b>14:00</b>  -  💡 СОБРАНИЕ
+    <b>17:00</b>  -  ☁️ МОЛИТВА
+    <b>18:00</b>  -  💡 СОБРАНИЕ
 '''
+# Create the timetable line
 
-# Create the line of events which now
+# Create the line of events which now and further
 def events_now():
-    now = datetime.now()
-    events = Events.query.filter(and_(Events.dateStart <= now, Events.dateFinish >= now))
+    utc_now = datetime.now(tzutc())
+    utc_next = utc_now + timedelta(minutes=120)
 
-    line = '<b>Сейчас:</b>\n'
+    events_now = Events.query.filter(and_(Events.dateStart <= utc_now, \
+                                            Events.dateFinish >= utc_now)).all()
 
-    for i in events:
-        if (i.name == 'ЗАВТРАК'):
-            line += '    <b>{}</b>  -  ☕ {} <i>({})</i>\n' \
-                .format(getTime(i.dateStart), i.name, i.speaker)
-        elif (i.name == 'МОЛИТВА'):
-            line += '    <b>{}</b>  -  🙏 {}\n'.format(getTime(i.dateStart), i.name)
-        elif (i.name == 'СОБРАНИЕ' or i.name == 'СОБРАНИЕ (Подростки)'):
-            if i.description is None:
-                line += '    <b>{}</b>  -  🔥 {}  ( <b>Проповедник:</b> <i>{}</i> )\n' \
-                            .format(getTime(i.dateStart), \
-                                    i.name, \
-                                    i.speaker)
-            else:
-                line += '    <b>{}</b>  -  🔥 {}  ( <b>Проповедник:</b> <i>{}</i> \
-<b>; тема:</b> <i>"{}"</i> )\n'.format(getTime(i.dateStart), \
-                                        i.name, \
-                                        i.speaker, \
-                                        i.description)
-        elif (i.name == 'МАСТЕР КЛАСС'):
-            line += '    <b>{}</b>  -  ✏️ {}  ( <b>Спикер:</b> <i>{}</i> \
-<b>; тема:</b> <i>"{}"</i> <b>; локация:</b> <i>{}</i> )\n' \
-                .format(getTime(i.dateStart), \
-                        i.name, i.speaker, i.description, i.location)
-        elif (i.name == 'МАЛЫЕ ГРУППЫ'):
-            line += '    <b>{}</b>  -  ☁️ {}\n'.format(getTime(i.dateStart), i.name)
-        elif (i.name == 'ОТКРЫТИЕ'):
-            line += '    <b>{}</b>  -  💣 {}\n'.format(getTime(i.dateStart), i.name)
-        elif (i.name == 'ВЕЧЕР ХВАЛЫ'):
-            line += '    <b>{}</b>  -  🔥 {}\n'.format(getTime(i.dateStart), i.name)
+    line = '<b>СЕЙЧАС:</b>\n\n'
+    if len(events_now) > 0:
+        for event in events_now:
+            line = generate_line(event, line)
 
-    if (line == '<b>Сейчас:</b>\n'):
-        line += '    Свободное время 😉\n'
+    if (line == '<b>СЕЙЧАС:</b>\n\n'):
+        line += '    Свободное время 😉\n\n'
+
+    events_next = Events.query.filter(and_(Events.dateStart > utc_now, \
+                                            Events.dateStart < utc_next)).all()
+    
+    line_add = '<b>ДАЛЕЕ:</b>\n\n'
+    if len(events_next) > 0:
+        minimal_date = events_next[0].dateStart
+        for event in events_next:
+            if (event.dateStart < minimal_date):
+                minimal_date = event.dateStart
+
+        for event in events_next:
+            if (event.dateStart == minimal_date):
+                line_add = generate_line(event, line_add)
+
+    if (line_add != '<b>ДАЛЕЕ:</b>\n\n'):
+        line += line_add
 
     return line
+# Create the line of events which now and further
+
+# Generate line
+def generate_line(event, line):
+    tz_samara = pytz.timezone('Europe/Samara')
+
+    if (event.name == 'РЕГИСТРАЦИЯ'):
+        dt = event.dateStart.astimezone(tz_samara)
+        line += '    <b>{}</b>  -  📌 {}\n\n'.format(getTime(dt), event.name)
+    elif (event.name == 'МОЛИТВА'):
+        dt = event.dateStart.astimezone(tz_samara)
+        line += '    <b>{}</b>  -  🙏 {}\n\n'.format(getTime(dt), event.name)
+    elif (event.name == 'МАЛЫЕ ГРУППЫ'):
+        dt = event.dateStart.astimezone(tz_samara)
+        line += '    <b>{}</b>  -  ☁️ {}\n\n'.format(getTime(dt), event.name)
+    elif (event.name == 'ВЕЧЕР ХВАЛЫ'):
+        dt = event.dateStart.astimezone(tz_samara)
+        line += '    <b>{}</b>  -  🔥 {}\n\n'.format(getTime(dt), event.name)
+    elif (event.name == 'ОБЕД + РАЗВЛЕЧЕНИЯ'):
+        dt = event.dateStart.astimezone(tz_samara)
+        line += '    <b>{}</b>  -  🎈 {}\n\n'.format(getTime(dt), event.name)
+    elif (event.name == 'ОТКРЫТИЕ'):
+        dt = event.dateStart.astimezone(tz_samara)
+        line += '    <b>{}</b>  -  💣 {}\n        проповедник: <i>"{}"</i>\n\n' \
+                                                .format(getTime(dt), \
+                                                        event.name, \
+                                                            event.speaker)
+    elif (event.name == 'СОБРАНИЕ'):
+        dt = event.dateStart.astimezone(tz_samara)
+        if (event.speaker is None):
+            line += '    <b>{}</b>  -  💡 {}\n\n'.format(getTime(dt), \
+                                                        event.name)
+        else:
+            line += '    <b>{}</b>  -  💡 {}\n        проповедник: <i>"{}"</i>\n\n' \
+                                                    .format(getTime(dt), \
+                                                            event.name, \
+                                                                event.speaker)
+    elif (event.name == 'БОЛЬШОЕ ТОК-ШОУ'):
+        dt = event.dateStart.astimezone(tz_samara)
+        line += '    <b>{}</b>  -  🎤 {}\n        тема: <i>"{}"</i>\n\n' \
+                                                .format(getTime(dt), \
+                                                        event.name, \
+                                                            event.description)
+    elif (event.name == 'МАСТЕР-КЛАСС'):
+        dt = event.dateStart.astimezone(tz_samara)
+        line += '    <b>{}</b>  -  ✏️ {}\n        спикер: <i>"{}"</i>\n\
+        тема: <i>"{}"</i>\n        локация: <i>"{}"</i>\n\n' \
+                                                .format(getTime(dt), \
+                                                        event.name, \
+                                                            event.speaker, \
+                                                                event.description, \
+                                                                    event.location)
+    elif (event.name == 'ТОК-ШОУ'):
+        dt = event.dateStart.astimezone(tz_samara)
+        line += '    <b>{}</b>  -  🔔 {}\n        спикер: <i>"{}"</i>\n\
+        тема: <i>"{}"</i>\n        локация: <i>"{}"</i>\n\n' \
+                                                .format(getTime(dt), \
+                                                        event.name, \
+                                                            event.speaker, \
+                                                                event.description, \
+                                                                    event.location)
+    elif (event.name == 'ПРЕСС-КОНФЕРЕНЦИЯ'):
+        dt = event.dateStart.astimezone(tz_samara)
+        line += '    <b>{}</b>  -  📢 {}\n        спикер: <i>"{}"</i>\n\
+        локация: <i>"{}"</i>\n\n' \
+                                                .format(getTime(dt), \
+                                                        event.name, \
+                                                            event.speaker, \
+                                                                event.location)
+    return line
+# Generate line
 
 # Generate line hour:minute
 def getTime(dt):
@@ -828,6 +919,7 @@ def getTime(dt):
         minute = '0' + str(minute)
 
     return '{}:{}'.format(hour, minute)
+# Generate line hour:minute
 
 # grp_db_processing
 def grp_db_processing(message, last_name, first_name, second_name):
@@ -877,3 +969,4 @@ def change_status_for_user(message):
                     .format(request[0], request[1]), parse_mode='HTML')
     except Exception as e:
         bot.send_message(message, 'oooops')
+# Function for changing status for user

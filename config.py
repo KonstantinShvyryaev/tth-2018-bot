@@ -19,3 +19,6 @@ web_site = 'https://your_app.herokuapp.com/'
 # Google API #
 CREDENTIALS_FILE = 'your_credentials_file'
 spreadsheet_id = 'your_spreadsheet_id'
+
+# Botan API #
+botan_key = 'your_botan_key'
