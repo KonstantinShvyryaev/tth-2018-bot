@@ -1053,7 +1053,7 @@ def callback_inline(call):
                                                 callback_data='ws_sat_yaroslav')
             ws_sat_julia = types.InlineKeyboardButton(text='Между нами девочками', \
                                                 callback_data='ws_sat_julia')
-            ws_sat_denis = types.InlineKeyboardButton(text='Как же мне женится', \
+            ws_sat_denis = types.InlineKeyboardButton(text='Как же мне жениться', \
                                                 callback_data='ws_sat_denis')
             ws_sat_igor = types.InlineKeyboardButton(text='Ораторское искусство \
 и раскрепощение', \
@@ -1158,7 +1158,7 @@ def callback_inline(call):
 
             bot.edit_message_text(chat_id=call.message.chat.id, \
                             message_id=call.message.message_id, \
-                            text='<b>✏️ Мастер-классы => Суббота => "Как же мне женится \
+                            text='<b>✏️ Мастер-классы => Суббота => "Как же мне жениться \
 или мужской разговор"</b>\n\n\
 Место: <i>Большой зал (задние ряды)</i>\n\n\
 Опытный семейный консультант и человек, помогший построить качественные отношения многих \
@@ -1215,7 +1215,7 @@ def callback_inline(call):
                                                 callback_data='ws_sat_yaroslav')
             ws_sat_julia = types.InlineKeyboardButton(text='Между нами девочкам', \
                                                 callback_data='ws_sat_julia')
-            ws_sat_denis = types.InlineKeyboardButton(text='Как же мне женится', \
+            ws_sat_denis = types.InlineKeyboardButton(text='Как же мне жениться', \
                                                 callback_data='ws_sat_denis')
             ws_sat_igor = types.InlineKeyboardButton(text='Ораторское искусство \
 и раскрепощение', \
