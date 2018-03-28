@@ -62,15 +62,16 @@ def start(message):
     markup.row('Расписание', 'Что сейчас?')
     markup.row('Регистрация', 'Я не расселен')
     markup.row('Где покушать?', 'Кто на TTH?')
-    markup.row('В какой я группе?')
+    markup.row('В какой я группе?', 'Мастер-классы')
     if (user.status == 'User'):
         pass
     elif (user.status == 'Admin'):
         markup.row('Отправить мем', 'Отправить сообщение')
         markup.row('Отправить опрос', 'Обновить')
+        markup.row('Отправить стикеры')
         markup.row('Изменить статус пользователя')
     elif (user.status == 'Questions'):
-        markup.row('Отправить опрос')
+        markup.row('Отправить опрос', 'Отправить сообщение')
     elif (user.status == 'Memeses'):
         markup.row('Отправить мем')
     elif (user.status == 'VIP'):
@@ -92,15 +93,16 @@ def start_keyboard(message):
     markup.row('Расписание', 'Что сейчас?')
     markup.row('Регистрация', 'Я не расселен')
     markup.row('Где покушать?', 'Кто на TTH?')
-    markup.row('В какой я группе?')
+    markup.row('В какой я группе?', 'Мастер-классы')
     if (user.status == 'User'):
         pass
     elif (user.status == 'Admin'):
         markup.row('Отправить мем', 'Отправить сообщение')
         markup.row('Отправить опрос', 'Обновить')
+        markup.row('Отправить стикеры')
         markup.row('Изменить статус пользователя')
     elif (user.status == 'Questions'):
-        markup.row('Отправить опрос')
+        markup.row('Отправить опрос', 'Отправить сообщение')
     elif (user.status == 'Memeses'):
         markup.row('Отправить мем')
     elif (user.status == 'VIP'):
@@ -108,7 +110,10 @@ def start_keyboard(message):
 
     bot.send_message(message.chat.id, 'Клавиатура включена', reply_markup=markup)
 
-    botan.track(botan_key, message.chat.id, None, 'start_keyboard')
+    try:
+        botan.track(botan_key, message.chat.id, None, 'start_keyboard')
+    except Exception as e:
+        pass
 ### /start_keyboard command ###
 
 ### /stop_keyboard command ###
@@ -118,7 +123,10 @@ def stop_keyboard(message):
 
     bot.send_message(message.chat.id, 'Клавиатура отключена', reply_markup=remove_markup)
 
-    botan.track(botan_key, message.chat.id, None, 'stop_keyboard')
+    try:
+        botan.track(botan_key, message.chat.id, None, 'stop_keyboard')
+    except Exception as e:
+        pass
 ### /stop_keyboard command ###
 
 ### /git command ###
@@ -133,7 +141,10 @@ def git(message):
                     parse_mode='HTML', \
                     reply_markup=buttons)
 
-    botan.track(botan_key, message.chat.id, None, 'git')
+    try:
+        botan.track(botan_key, message.chat.id, None, 'git')
+    except Exception as e:
+        pass
 ### /git command ###
 
 # Google: create array when app starting
@@ -163,14 +174,20 @@ def text(message):
     if (message.text == 'Расписание'):
         bot.send_message(message.chat.id, timetable(), parse_mode='HTML')
 
-        botan.track(botan_key, message.chat.id, None, 'Расписание')
+        try:
+            botan.track(botan_key, message.chat.id, None, 'Расписание')
+        except Exception as e:
+            pass
     # Расписание
 
     # Что сейчас?
     elif (message.text == 'Что сейчас?'):
         bot.send_message(message.chat.id, events_now(), parse_mode='HTML')
 
-        botan.track(botan_key, message.chat.id, None, 'Что сейчас?')
+        try:
+            botan.track(botan_key, message.chat.id, None, 'Что сейчас?')
+        except Exception as e:
+            pass
     # Что сейчас?
 
     # Регистрация
@@ -181,11 +198,14 @@ def text(message):
         buttons.add(url_button)
 
         bot.send_message(message.chat.id, \
-                '<b>Для регистрации вам необходимо перейти поссылке 👇</b>', \
+                '<b>Для регистрации вам необходимо перейти по ссылке 👇</b>', \
                 parse_mode='HTML', \
                 reply_markup=buttons)
 
-        botan.track(botan_key, message.chat.id, None, 'Регистрация')
+        try:
+            botan.track(botan_key, message.chat.id, None, 'Регистрация')
+        except Exception as e:
+            pass
     # Регистрация
     
     # Я не расселен
@@ -203,7 +223,10 @@ def text(message):
                         parse_mode='HTML', \
                         reply_markup=buttons)
 
-        botan.track(botan_key, message.chat.id, None, 'Я не расселен')
+        try:
+            botan.track(botan_key, message.chat.id, None, 'Я не расселен')
+        except Exception as e:
+            pass
     # Я не расселен
 
     # Где покушать?
@@ -217,7 +240,10 @@ def text(message):
                         parse_mode='HTML', \
                         reply_markup=buttons)
 
-        botan.track(botan_key, message.chat.id, None, 'Где покушать?')
+        try:
+            botan.track(botan_key, message.chat.id, None, 'Где покушать?')
+        except Exception as e:
+            pass
     # Где покушать?
 
     # Кто на TTH?
@@ -237,7 +263,6 @@ def text(message):
             conf_info = response['values'][0]
             conf_info_temp[0] = conf_info
 
-        users = Users.query.all()
         bot.send_message(message.chat.id, \
                         '<b>💡 На конференции 💡</b>\n🚗 Приехали: {}\n\
 ⚽ Младше 14 лет: {}\n🎮 От 14 до 18 лет: {}\n🍀 Старше 18 лет: {}\n\
@@ -249,12 +274,18 @@ def text(message):
                                 conf_info_temp[0][29]), \
                         parse_mode='HTML')
 
-        botan.track(botan_key, message.chat.id, None, 'Кто на TTH?')
+        try:
+            botan.track(botan_key, message.chat.id, None, 'Кто на TTH?')
+        except Exception as e:
+            pass
     # Кто на TTH?
 
     # В какой я группе?
     elif (message.text == 'В какой я группе?'):
-        botan.track(botan_key, message.chat.id, None, 'В какой я группе?')
+        try:
+            botan.track(botan_key, message.chat.id, None, 'В какой я группе?')
+        except Exception as e:
+            pass
 
         global small_group_temp
 
@@ -309,6 +340,13 @@ def text(message):
                             bot.send_message(message.chat.id, \
                                 '<b>Вы в {} группе 😊</b>'.format(i[0]), \
                                 parse_mode='HTML')
+
+                        try:
+                            grp_map = open('static/img/map.jpg', 'rb')
+                            bot.send_photo(message.chat.id, grp_map)
+                            grp_map.close()
+                        except Exception as e:
+                            pass
 
                         buttons = types.InlineKeyboardMarkup()
                         grp_save = types.InlineKeyboardButton(text='Сохранить', \
@@ -365,6 +403,27 @@ def text(message):
         bot.register_next_step_handler(msg, grp_processing)
     # В какой я группе?
 
+    # Мастер-классы
+    if (message.text == 'Мастер-классы'):
+        buttons = types.InlineKeyboardMarkup()
+        ws_friday = types.InlineKeyboardButton(text='Пятница', \
+                                            callback_data='ws_friday')
+        ws_saturday = types.InlineKeyboardButton(text='Суббота', \
+                                            callback_data='ws_saturday')
+        buttons.add(ws_friday)
+        buttons.add(ws_saturday)
+
+        bot.send_message(message.chat.id, \
+                        '<b>✏️ Мастер-классы</b>', \
+                        parse_mode='HTML', \
+                        reply_markup=buttons)
+
+        try:
+            botan.track(botan_key, message.chat.id, None, 'Мастер-классы')
+        except Exception as e:
+            pass
+    # Мастер-классы
+
     # Обновить
     elif (message.text == 'Обновить'):
         user = Users.query.filter_by(chat_id=message.from_user.id).first()
@@ -381,6 +440,23 @@ def text(message):
                             parse_mode="HTML", \
                             reply_markup=buttons)
     # Обновить
+
+    # Отправить стикеры
+    elif (message.text == 'Отправить стикеры'):
+        user = Users.query.filter_by(chat_id=message.from_user.id).first()
+        if(user.status == 'Admin'):
+            buttons = types.InlineKeyboardMarkup()
+            stc_post = types.InlineKeyboardButton(text='Отправить', \
+                                                    callback_data='stc_post')
+            stc_break = types.InlineKeyboardButton(text='Отмена', \
+                                                    callback_data='stc_break')
+            buttons.add(stc_post, stc_break)
+
+            bot.send_message(message.chat.id, \
+                            '<b>Вы хотите отправить стикеры всем пользователям?</b>', \
+                            parse_mode="HTML", \
+                            reply_markup=buttons)
+    # Отправить стикеры
 
     # Изменить статус пользователя
     elif (message.text == 'Изменить статус пользователя'):
@@ -460,7 +536,7 @@ def text(message):
         # message_processing
 
         user = Users.query.filter_by(chat_id=message.from_user.id).first()
-        if(user.status == 'Admin' or user.status == 'VIP'):
+        if(user.status == 'Admin' or user.status == 'VIP' or user.status == 'Questions'):
             msg = bot.send_message(message.chat.id, \
                                 '<b>Введите сообщение 😌</b>', \
                                 parse_mode='HTML')
@@ -472,8 +548,8 @@ def text(message):
         # inter_pocessing
         def inter_processing(message):
             try:
-                test_splt = message.text.split()
-                url = test_splt[0]
+                text_splt = message.text.split()
+                url = text_splt[0]
 
                 buttons = types.InlineKeyboardMarkup()
                 url_button = types.InlineKeyboardButton(text='Пройти опрос', \
@@ -733,15 +809,16 @@ def callback_inline(call):
                     markup.row('Расписание', 'Что сейчас?')
                     markup.row('Регистрация', 'Я не расселен')
                     markup.row('Где покушать?', 'Кто на TTH?')
-                    markup.row('В какой я группе?')
+                    markup.row('В какой я группе?', 'Мастер-классы')
                     if (user.status == 'User'):
                         pass
                     elif (user.status == 'Admin'):
                         markup.row('Отправить мем', 'Отправить сообщение')
                         markup.row('Отправить опрос', 'Обновить')
+                        markup.row('Отправить стикеры')
                         markup.row('Изменить статус пользователя')
                     elif (user.status == 'Questions'):
-                        markup.row('Отправить опрос')
+                        markup.row('Отправить опрос', 'Отправить сообщение')
                     elif (user.status == 'Memeses'):
                         markup.row('Отправить мем')
                     elif (user.status == 'VIP'):
@@ -762,6 +839,403 @@ def callback_inline(call):
                                 text="<b>В другой раз 😉</b>", \
                                 parse_mode='HTML')
         # update_break button
+
+        # stc_post button
+        elif call.data == 'upd_success':
+            bot.edit_message_text(chat_id=call.message.chat.id, \
+                                message_id=call.message.message_id, \
+                                text="<b>Готово 😊</b>", \
+                                parse_mode='HTML')
+
+            users = Users.query.all()
+            for user in users:
+                try:
+                    buttons = types.InlineKeyboardMarkup()
+                    url_button = types.InlineKeyboardButton(text='Стикеры', \
+                                        url='https://t.me/addstickers/tth_2018')
+                    buttons.add(url_button)
+
+                    bot.send_message(user.chat_id, \
+                            '<b>Мы сделали для вас стикеры 👇</b>', \
+                            parse_mode='HTML', \
+                            reply_markup=buttons)
+                except Exception as e:
+                    continue
+        # stc_post button
+
+        # stc_break button
+        elif call.data == 'stc_break':
+            bot.edit_message_text(chat_id=call.message.chat.id, \
+                                message_id=call.message.message_id, \
+                                text="<b>В другой раз 😉</b>", \
+                                parse_mode='HTML')
+        # stc_break button
+
+        # ws_friday button
+        elif call.data == 'ws_friday':
+            buttons = types.InlineKeyboardMarkup()
+            ws_fr_michael = types.InlineKeyboardButton(text='Кофе брейк с Михаилом Нокарашвили', \
+                                                callback_data='ws_fr_michael')
+            ws_fr_maxim = types.InlineKeyboardButton(text='Сила и продуктивность \
+домашних групп', \
+                                                callback_data='ws_fr_maxim')
+            ws_fr_roman = types.InlineKeyboardButton(text='Как не состариться в ожидании перемен?', \
+                                                callback_data='ws_fr_roman')
+            ws_fr_eugene = types.InlineKeyboardButton(text='Подростковое \
+служение – конвейер пробуждения', \
+                                                callback_data='ws_fr_eugene')
+            ws_fr_igor = types.InlineKeyboardButton(text='Ораторское искусство и раскрепощение', \
+                                                callback_data='ws_fr_igor')
+            ws_fr_comeback = types.InlineKeyboardButton(text='👈 Назад', \
+                                                callback_data='ws_fr_comeback')
+            buttons.add(ws_fr_michael)
+            buttons.add(ws_fr_maxim)
+            buttons.add(ws_fr_roman)
+            buttons.add(ws_fr_eugene)
+            buttons.add(ws_fr_igor)
+            buttons.add(ws_fr_comeback)
+
+            bot.edit_message_text(chat_id=call.message.chat.id, \
+                                message_id=call.message.message_id, \
+                                text='<b>✏️ Мастер-классы => Пятница</b>', \
+                                parse_mode='HTML', \
+                                reply_markup=buttons)
+        # ws_friday button
+
+        # ws_fr_michael button
+        elif call.data == 'ws_fr_michael':
+            buttons = types.InlineKeyboardMarkup()
+            ws_fr_descr_comeback = types.InlineKeyboardButton(text='👈 Назад', \
+                                                callback_data='ws_fr_descr_comeback')
+            buttons.add(ws_fr_descr_comeback)
+
+            bot.edit_message_text(chat_id=call.message.chat.id, \
+                            message_id=call.message.message_id, \
+                            text='<b>✏️ Мастер-классы => Пятница => "Кофе-брейк с \
+Михаил Нокарашвили"</b>\n\n\
+Место: <i>Кафе</i>\n\n\
+Это отличное время, которое вы можете провести вместе с Михаилом Нокарашвили 😉', \
+                            parse_mode='HTML', \
+                            reply_markup=buttons)
+        # ws_fr_michael button
+
+        # ws_fr_maxim button
+        elif call.data == 'ws_fr_maxim':
+            buttons = types.InlineKeyboardMarkup()
+            ws_fr_descr_comeback = types.InlineKeyboardButton(text='👈 Назад', \
+                                                callback_data='ws_fr_descr_comeback')
+            buttons.add(ws_fr_descr_comeback)
+
+            bot.edit_message_text(chat_id=call.message.chat.id, \
+                            message_id=call.message.message_id, \
+                            text='<b>✏️ Мастер-классы => Пятница => "Сила и продуктивность \
+домашних групп или как сделать, чтобы моя домашняя группа росла?"</b>\n\n\
+Место: <i>Большой зал (центр)</i>\n\n\
+Максим Тычков расскажет о том, в чем является \
+успех домашней группы и поделится идями о том, как же умножать свою домашнюю группу 😉', \
+                            parse_mode='HTML', \
+                            reply_markup=buttons)
+        # ws_fr_maxim button
+
+        # ws_fr_roman button
+        elif call.data == 'ws_fr_roman':
+            buttons = types.InlineKeyboardMarkup()
+            ws_fr_descr_comeback = types.InlineKeyboardButton(text='👈 Назад', \
+                                                callback_data='ws_fr_descr_comeback')
+            buttons.add(ws_fr_descr_comeback)
+
+            bot.edit_message_text(chat_id=call.message.chat.id, \
+                            message_id=call.message.message_id, \
+                            text='<b>✏️ Мастер-классы => Пятница => "Как не состариться \
+в ожидании перемен?"</b>\n\n\
+Место: <i>Большой зал (перед сценой)</i>\n\n\
+Когда жизнь преподносит выбор, как понять вызов ли это от Бога, \
+или ловушка от дьявола? На что опираться, принимая судьбоносные решения? Если ты \
+задавался этими или похожими вопросами и пока не получил ответа, приглашаем тебя \
+на мастер-класс с Романом 😉', \
+                            parse_mode='HTML', \
+                            reply_markup=buttons)
+        # ws_fr_roman button
+
+        # ws_fr_eugene button
+        elif call.data == 'ws_fr_eugene':
+            buttons = types.InlineKeyboardMarkup()
+            ws_fr_descr_comeback = types.InlineKeyboardButton(text='👈 Назад', \
+                                                callback_data='ws_fr_descr_comeback')
+            buttons.add(ws_fr_descr_comeback)
+
+            bot.edit_message_text(chat_id=call.message.chat.id, \
+                            message_id=call.message.message_id, \
+                            text='<b>✏️ Мастер-классы => Пятница => "Подростковое служение – \
+конвейер пробуждения"</b>\n\n\
+Место: <i>Большой зал (задние ряды)</i>\n\n\
+Евгений Брощенко расскажет вам о важности подросткового служения и о том, что \
+нужно делать сегодня, чтобы завтра был результат! 😉', \
+                            parse_mode='HTML', \
+                            reply_markup=buttons)
+        # ws_fr_eugene button
+
+        # ws_fr_igor button
+        elif call.data == 'ws_fr_igor':
+            buttons = types.InlineKeyboardMarkup()
+            ws_fr_descr_comeback = types.InlineKeyboardButton(text='👈 Назад', \
+                                                callback_data='ws_fr_descr_comeback')
+            buttons.add(ws_fr_descr_comeback)
+
+            bot.edit_message_text(chat_id=call.message.chat.id, \
+                            message_id=call.message.message_id, \
+                            text='<b>✏️ Мастер-классы => Пятница => "Ораторское искусство \
+и раскрепощение"</b>\n\n\
+Место: <i>Виноградная комната</i>\n\n\
+О том, как готовится к выступлению и как не боятся выступать перед публикой, \
+вам расскажет Игорь Попов на мастер-классе «Ораторское искусство и раскрепощение» 😉', \
+                            parse_mode='HTML', \
+                            reply_markup=buttons)
+        # ws_fr_igor button
+
+        # ws_fr_comeback button
+        elif call.data == 'ws_fr_comeback':
+            buttons = types.InlineKeyboardMarkup()
+            ws_friday = types.InlineKeyboardButton(text='Пятница', \
+                                                callback_data='ws_friday')
+            ws_saturday = types.InlineKeyboardButton(text='Суббота', \
+                                                callback_data='ws_saturday')
+            buttons.add(ws_friday)
+            buttons.add(ws_saturday)
+
+            bot.edit_message_text(chat_id=call.message.chat.id, \
+                            message_id=call.message.message_id, \
+                            text='<b>✏️ Мастер-классы</b>', \
+                            parse_mode='HTML', \
+                            reply_markup=buttons)
+        # ws_fr_comeback button
+
+        # ws_fr_descr_comeback button
+        elif call.data == 'ws_fr_descr_comeback':
+            buttons = types.InlineKeyboardMarkup()
+            ws_fr_michael = types.InlineKeyboardButton(text='Кофе брейк с Михаилом Нокарашвили', \
+                                                callback_data='ws_fr_michael')
+            ws_fr_maxim = types.InlineKeyboardButton(text='Сила и продуктивность \
+домашних групп', \
+                                                callback_data='ws_fr_maxim')
+            ws_fr_roman = types.InlineKeyboardButton(text='Как не состариться в ожидании перемен?', \
+                                                callback_data='ws_fr_roman')
+            ws_fr_eugene = types.InlineKeyboardButton(text='Подростковое \
+служение – конвейер пробуждения', \
+                                                callback_data='ws_fr_eugene')
+            ws_fr_igor = types.InlineKeyboardButton(text='Ораторское искусство и раскрепощение', \
+                                                callback_data='ws_fr_igor')
+            ws_fr_comeback = types.InlineKeyboardButton(text='👈 Назад', \
+                                                callback_data='ws_fr_comeback')
+            buttons.add(ws_fr_michael)
+            buttons.add(ws_fr_maxim)
+            buttons.add(ws_fr_roman)
+            buttons.add(ws_fr_eugene)
+            buttons.add(ws_fr_igor)
+            buttons.add(ws_fr_comeback)
+
+            bot.edit_message_text(chat_id=call.message.chat.id, \
+                                message_id=call.message.message_id, \
+                                text='<b>✏️ Мастер-классы => Пятница</b>', \
+                                parse_mode='HTML', \
+                                reply_markup=buttons)
+        # ws_fr_descr_comeback button
+
+        # ws_saturday button
+        elif call.data == 'ws_saturday':
+            buttons = types.InlineKeyboardMarkup()
+            ws_sat_аlexey = types.InlineKeyboardButton(text='Финансовая грамотность', \
+                                                callback_data='ws_sat_аlexey')
+            ws_sat_oksana = types.InlineKeyboardButton(text='Как начать пророчествовать?', \
+                                                callback_data='ws_sat_oksana')
+            ws_sat_yaroslav = types.InlineKeyboardButton(text='Предпринимательство в \
+молодом возрасте', \
+                                                callback_data='ws_sat_yaroslav')
+            ws_sat_julia = types.InlineKeyboardButton(text='Между нами девочками', \
+                                                callback_data='ws_sat_julia')
+            ws_sat_denis = types.InlineKeyboardButton(text='Как же мне женится', \
+                                                callback_data='ws_sat_denis')
+            ws_sat_igor = types.InlineKeyboardButton(text='Ораторское искусство \
+и раскрепощение', \
+                                                callback_data='ws_sat_igor')
+            ws_sat_comeback = types.InlineKeyboardButton(text='👈 Назад', \
+                                                callback_data='ws_sat_comeback')
+            buttons.add(ws_sat_аlexey)
+            buttons.add(ws_sat_oksana)
+            buttons.add(ws_sat_yaroslav)
+            buttons.add(ws_sat_julia)
+            buttons.add(ws_sat_denis)
+            buttons.add(ws_sat_igor)
+            buttons.add(ws_sat_comeback)
+
+            bot.edit_message_text(chat_id=call.message.chat.id, \
+                                message_id=call.message.message_id, \
+                                text='<b>✏️ Мастер-классы => Суббота</b>', \
+                                parse_mode='HTML', \
+                                reply_markup=buttons)
+        # ws_saturday button
+
+        # ws_sat_аlexey button
+        elif call.data == 'ws_sat_аlexey':
+            buttons = types.InlineKeyboardMarkup()
+            ws_sat_descr_comeback = types.InlineKeyboardButton(text='👈 Назад', \
+                                                callback_data='ws_sat_descr_comeback')
+            buttons.add(ws_sat_descr_comeback)
+
+            bot.edit_message_text(chat_id=call.message.chat.id, \
+                            message_id=call.message.message_id, \
+                            text='<b>✏️ Мастер-классы => Суббота => "Финансовая \
+грамотность"</b>\n\n\
+Место: <i>Кафе</i>\n\n\
+Баталов Алексей расскажет о том, как эффективно распоряжаться теми деньгами, которые уже у \
+тебя есть, чтобы они умножались и отвечали на твои потребности 😉', \
+                            parse_mode='HTML', \
+                            reply_markup=buttons)
+        # ws_sat_аlexey button
+
+        # ws_sat_oksana button
+        elif call.data == 'ws_sat_oksana':
+            buttons = types.InlineKeyboardMarkup()
+            ws_sat_descr_comeback = types.InlineKeyboardButton(text='👈 Назад', \
+                                                callback_data='ws_sat_descr_comeback')
+            buttons.add(ws_sat_descr_comeback)
+
+            bot.edit_message_text(chat_id=call.message.chat.id, \
+                            message_id=call.message.message_id, \
+                            text='<b>✏️ Мастер-классы => Суббота => "Как начать \
+пророчествовать?"</b>\n\n\
+Место: <i>Большой зал (перед сценой)</i>\n\n\
+Как стать проводников Божьего слова, начать слышать Его и делиться этим с другими? Ответы \
+на эти и другие вопросы вы узнаете на мастер - классе Оксаны Тарановой \
+"Как начать пророчествовать?" 😉', \
+                            parse_mode='HTML', \
+                            reply_markup=buttons)
+        # ws_sat_oksana button
+
+        # ws_sat_yaroslav button
+        elif call.data == 'ws_sat_yaroslav':
+            buttons = types.InlineKeyboardMarkup()
+            ws_sat_descr_comeback = types.InlineKeyboardButton(text='👈 Назад', \
+                                                callback_data='ws_sat_descr_comeback')
+            buttons.add(ws_sat_descr_comeback)
+
+            bot.edit_message_text(chat_id=call.message.chat.id, \
+                            message_id=call.message.message_id, \
+                            text='<b>✏️ Мастер-классы => Суббота => "Предпринимательство в \
+молодом возрасте"</b>\n\n\
+Место: <i>Большой зал (центр)</i>\n\n\
+Ярослав Муромцев расскажет почему же не страшно начинать свое дело в 17 и почему \
+стоит это делать. Также вы сможете задать ему свои вопросы 😉', \
+                            parse_mode='HTML', \
+                            reply_markup=buttons)
+        # ws_sat_yaroslav button
+
+        # ws_sat_julia button
+        elif call.data == 'ws_sat_julia':
+            buttons = types.InlineKeyboardMarkup()
+            ws_sat_descr_comeback = types.InlineKeyboardButton(text='👈 Назад', \
+                                                callback_data='ws_sat_descr_comeback')
+            buttons.add(ws_sat_descr_comeback)
+
+            bot.edit_message_text(chat_id=call.message.chat.id, \
+                            message_id=call.message.message_id, \
+                            text='<b>✏️ Мастер-классы => Суббота => "Между нами девочками"</b>\n\n\
+Место: <i>Гостевая комната</i>\n\n\
+У каждой девушки есть секретики, которые поймем только мы-девушки. Нам так необходима \
+помощь и советы в некоторых вопросах и моментах, которые сложно пройти. \
+В том числе и вопрос отношений с сильным представителями планеты. Команд жен и невест \
+будет искренне делиться своими ошибками, переживаниями и Божьими ответами в их жизни 😉', \
+                            parse_mode='HTML', \
+                            reply_markup=buttons)
+        # ws_sat_julia button
+
+        # ws_sat_denis button
+        elif call.data == 'ws_sat_denis':
+            buttons = types.InlineKeyboardMarkup()
+            ws_sat_descr_comeback = types.InlineKeyboardButton(text='👈 Назад', \
+                                                callback_data='ws_sat_descr_comeback')
+            buttons.add(ws_sat_descr_comeback)
+
+            bot.edit_message_text(chat_id=call.message.chat.id, \
+                            message_id=call.message.message_id, \
+                            text='<b>✏️ Мастер-классы => Суббота => "Как же мне женится \
+или мужской разговор"</b>\n\n\
+Место: <i>Большой зал (задние ряды)</i>\n\n\
+Опытный семейный консультант и человек, помогший построить качественные отношения многих \
+пар с юмором расскажет о том, как сделать один их самых важных выборов в жизни: брак, \
+ответит на актуальные вопросы, даст духовно-практичный взгляд 😉', \
+                            parse_mode='HTML', \
+                            reply_markup=buttons)
+        # ws_sat_denis button
+
+        # ws_sat_igor button
+        elif call.data == 'ws_sat_igor':
+            buttons = types.InlineKeyboardMarkup()
+            ws_sat_descr_comeback = types.InlineKeyboardButton(text='👈 Назад', \
+                                                callback_data='ws_sat_descr_comeback')
+            buttons.add(ws_sat_descr_comeback)
+
+            bot.edit_message_text(chat_id=call.message.chat.id, \
+                            message_id=call.message.message_id, \
+                            text='<b>✏️ Мастер-классы => Суббота => "Ораторское искусство \
+и раскрепощение"</b>\n\n\
+Место: <i>Виноградная комната</i>\n\n\
+О том, как готовится к выступлению и как не боятся выступать перед публикой, \
+вам расскажет Игорь Попов на мастер-классе «Ораторское искусство и раскрепощение» 😉', \
+                            parse_mode='HTML', \
+                            reply_markup=buttons)
+        # ws_sat_igor button
+
+        # ws_sat_comeback button
+        elif call.data == 'ws_sat_comeback':
+            buttons = types.InlineKeyboardMarkup()
+            ws_friday = types.InlineKeyboardButton(text='Пятница', \
+                                                callback_data='ws_friday')
+            ws_saturday = types.InlineKeyboardButton(text='Суббота', \
+                                                callback_data='ws_saturday')
+            buttons.add(ws_friday)
+            buttons.add(ws_saturday)
+
+            bot.edit_message_text(chat_id=call.message.chat.id, \
+                            message_id=call.message.message_id, \
+                            text='<b>✏️ Мастер-классы</b>', \
+                            parse_mode='HTML', \
+                            reply_markup=buttons)
+        # ws_sat_comeback button
+
+        # ws_sat_descr_comeback button
+        elif call.data == 'ws_sat_descr_comeback':
+            buttons = types.InlineKeyboardMarkup()
+            ws_sat_аlexey = types.InlineKeyboardButton(text='Финансовая грамотность', \
+                                                callback_data='ws_sat_аlexey')
+            ws_sat_oksana = types.InlineKeyboardButton(text='Как начать пророчествовать?', \
+                                                callback_data='ws_sat_oksana')
+            ws_sat_yaroslav = types.InlineKeyboardButton(text='Предпринимательство в \
+молодом возрасте', \
+                                                callback_data='ws_sat_yaroslav')
+            ws_sat_julia = types.InlineKeyboardButton(text='Между нами девочкам', \
+                                                callback_data='ws_sat_julia')
+            ws_sat_denis = types.InlineKeyboardButton(text='Как же мне женится', \
+                                                callback_data='ws_sat_denis')
+            ws_sat_igor = types.InlineKeyboardButton(text='Ораторское искусство \
+и раскрепощение', \
+                                                callback_data='ws_sat_igor')
+            ws_sat_comeback = types.InlineKeyboardButton(text='👈 Назад', \
+                                                callback_data='ws_sat_comeback')
+            buttons.add(ws_sat_аlexey)
+            buttons.add(ws_sat_oksana)
+            buttons.add(ws_sat_yaroslav)
+            buttons.add(ws_sat_julia)
+            buttons.add(ws_sat_denis)
+            buttons.add(ws_sat_igor)
+            buttons.add(ws_sat_comeback)
+
+            bot.edit_message_text(chat_id=call.message.chat.id, \
+                            message_id=call.message.message_id, \
+                            text='<b>✏️ Мастер-классы => Суббота</b>', \
+                            parse_mode='HTML', \
+                            reply_markup=buttons)
+        # ws_sat_descr_comeback button
 
 ### Callback query handler ###
 
@@ -935,6 +1409,13 @@ def grp_db_processing(message, last_name, first_name, second_name):
                     bot.send_message(message.chat.id, \
                         '<b>Вы в {} группе 😊</b>'.format(i[0]), \
                         parse_mode='HTML')
+                try:
+                    grp_map = open('static/img/map.jpg', 'rb')
+                    bot.send_photo(message.chat.id, grp_map)
+                    grp_map.close()
+                except Exception as e:
+                    pass
+
                 return
             
             is_distributed = True
